@@ -9,6 +9,7 @@ class DynamicNumber {
     this._regexp = this._buildRegexp();
     this._isThousand = false;
     this._thousand = null;
+    this._max = null;
   }
 
   clone(){
@@ -22,6 +23,7 @@ class DynamicNumber {
     other._isThousand = this._isThousand;
     other._thousand = this._thousand;
     other._cursor = this._cursor;
+    other._max = this._max;
 
     return other
   }
@@ -74,6 +76,10 @@ class DynamicNumber {
     this._calculateThousandSeparator();
   }
 
+  set max(value){
+    this._max = value;
+  }
+
   calculate(rawViewValue = 0, oldModelValue = 0, oldViewValue = '0', cursorPosition = null) {
     this._rawViewValue = rawViewValue;
     this._oldModelValue = oldModelValue;
@@ -108,9 +114,15 @@ class DynamicNumber {
     }
      // view value success 'correct view format' test
     else {
-      this._newModelValue = this._createModelValue(value);
-      this._newViewValue = this._createViewValue(value);
-      this._cursor = this._calculateNewCursorPosition();
+      const modelValue =  this._createModelValue(value);
+      if(this._max && modelValue > this._max){
+        this._newModelValue = this._oldModelValue;
+        this._newViewValue = this._oldViewValue;
+      }else{
+        this._newModelValue = modelValue;
+        this._newViewValue = this._createViewValue(value);
+        this._cursor = this._calculateNewCursorPosition();
+      }
       return;
     }
   }

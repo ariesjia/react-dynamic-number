@@ -299,4 +299,25 @@ describe('Check calculated model and view values from input', ()=>{
       });
     });
   });
+   describe('Params: max=100 separator=\'.\'', ()=>{
+    var dynamicNumber;
+    //each time we start new dynamicNumber, we don't test changing params in existing object
+    before(()=>{
+      dynamicNumber = new DynamicNumber();
+      dynamicNumber.max = 100;
+      dynamicNumber.separator = '.';
+    });
+    describe('value=\'1234567\'', ()=>{
+      var value = '1234567';
+      before(()=>{
+        dynamicNumber.calculate(value);
+      });
+      it('should modelValue equal 1234567', ()=>{
+        expect(dynamicNumber.modelValue).to.be.equal(0);
+      });
+      it('should viewValue equal \'1234567\'', ()=>{
+        expect(dynamicNumber.viewValue).to.be.equal('0');
+      });
+    });
+  });
 });
